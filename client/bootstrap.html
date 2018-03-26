@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script type="text/javascript">
+      function WebSocketTest() {
+        if ("WebSocket" in window) {
+          ws = new WebSocket("ws://76.21.44.221:443");
+
+          ws.onmessage = function (evt) {
+            var received_msg = evt.data;
+            var score = Number(received_msg)
+            if (score >= 0.8) {
+              document.getElementById("scoreAlert").className = "alert alert-success";
+            } else {
+              document.getElementById("scoreAlert").className = "alert alert-info";
+            }
+            var pct = score * 100
+            pct = pct.toFixed(1)
+            document.getElementById("scoreAlert").innerHTML = "Calculated score: " + pct + "%"
+          };
+
+          window.onbeforeunload = function(event) {
+            socket.close();
+          };
+        } else {
+          alert("Your browser doesn't support WebSockets");
+        }
+      }
+
+      function handleClick() {
+        var impression = document.getElementById("inputImpression").value;
+        ws.send(impression)
+      }
+    </script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Automatic Determination of Communicable Findings</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <link href="bootstrap.css" rel="stylesheet">
+  </head>
+
+  <body onload="var ws; WebSocketTest();">
+    <form class="form-signin">
+      <div class="text-center mb-4">
+        <h1 class="h3 mb-3 font-weight-normal">Determination of Communicable Findings</h1>
+        <p>Input the Impression section of a radiology report, and our machine learning model will automatically estimate the likelihood that the report contians evidence of communicable findings</p>
+      </div>
+
+      <div class="form-label-group">
+        <textarea type="textarea" rows="4" id="inputImpression" onkeydown="if (event.keyCode == 13) { handleClick(); return false; }" class="form-control" placeholder="Input your impression text" required autofocus></textarea>
+      </div>
+
+      <div id="scoreAlert" class="alert" role="alert">
+        Input your impression above to receive a report score
+      </div>
+      <button class="btn btn-lg btn-primary btn-block" type="button" onclick="handleClick(); return false;">Analyze Report</button>
+      <p class="mt-5 mb-3 text-muted text-center">This demo was created to accompany "Automated determination of communicable findings in radiology reports with intelligent word embeddings"</p>
+    </form>
+  </body>
+</html>

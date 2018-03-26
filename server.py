@@ -34,7 +34,7 @@ def message_received(client, server, message):
     # TODO: add logging
 
 # Run server
-PORT=22
+PORT=443
 server = WebsocketServer(PORT, host="0.0.0.0")
 server.set_fn_new_client(new_client)
 server.set_fn_client_left(client_left)

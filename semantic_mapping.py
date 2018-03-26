@@ -15,7 +15,6 @@ def reports_to_corpus(reports, out_file):
             out_file.write(sentence + "\n")
 
 class NegexSmearer(TransformerMixin):
-    # TODO: add range option
     def __init__(self, negex_range=5):
         self.negex_range = negex_range
     def transform(self, labeled_reports, *_):
@@ -128,6 +127,7 @@ DateTimeMapper = SemanticMapper([(r'[0-9][0-9]? [0-9][0-9]? [0-9][0-9][0-9][0-9]
                                  (r'[0-9][0-9]? [0-9][0-9] (am|pm)?', '')], regex=True)
 
 AlphaNumRemover = SemanticMapper([(r' [0-9]+','')], regex=True)
+MiscReplacements = SemanticMapper([('intracranial hemorrhage', 'intracranial_hemorrhage')])
 
 ExtenderPreserver = SemanticMapper([(' or ', ' EXT '), (' nor ', ' EXT ')])
 ExtenderRemover = SemanticMapper([('EXT', ''), ('NEGEX_EXT', ''), (('NEGEX_ ', ''))])

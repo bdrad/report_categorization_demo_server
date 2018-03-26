@@ -16,7 +16,7 @@ def reports_to_corpus(reports, out_file):
 
 class NegexSmearer(TransformerMixin):
     # TODO: add range option
-    def __init__(self, negex_range=4):
+    def __init__(self, negex_range=5):
         self.negex_range = negex_range
     def transform(self, labeled_reports, *_):
         result = []

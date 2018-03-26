@@ -4,7 +4,7 @@
     <script type="text/javascript">
       function WebSocketTest() {
         if ("WebSocket" in window) {
-          ws = new WebSocket("ws://localhost:9998");
+          ws = new WebSocket("ws://76.21.44.221:9998");
 
           ws.onmessage = function (evt) {
             var received_msg = evt.data;
@@ -31,7 +31,7 @@
    <body onload="var ws; WebSocketTest();">
      <form name="iform">
        <p><textarea rows="4" cols="50" id="impression" form="iform">Enter impression to be analyzed</textarea></p>
-       <input name="Analyze"  type="submit" value="Update" onclick="handleClick();return false"/>
+       <input name="Analyze" value="Analyze" type="button" onclick="handleClick();return false"/>
      </form>
      <p id="p1"></p>
    </body>

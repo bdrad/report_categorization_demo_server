@@ -1,0 +1,38 @@
+<html>
+   <head>
+     <title>Communicable Findings Detection Demo</title>
+    <script type="text/javascript">
+      function WebSocketTest() {
+        if ("WebSocket" in window) {
+          ws = new WebSocket("ws://localhost:9998");
+
+          ws.onmessage = function (evt) {
+            var received_msg = evt.data;
+            var score = Number(received_msg)
+            var pct = score * 100
+            pct = pct.toFixed(1)
+            document.getElementById("p1").innerHTML = "Calculated score: " + pct + "%"
+          };
+
+          window.onbeforeunload = function(event) {
+            socket.close();
+          };
+        } else {
+          alert("Your browser doesn't support WebSockets");
+        }
+      }
+
+      function handleClick() {
+        var impression = document.getElementById("impression").value;
+        ws.send(impression)
+      }
+    </script>
+   </head>
+   <body onload="var ws; WebSocketTest();">
+     <form name="iform">
+       <p><textarea rows="4" cols="50" id="impression" form="iform">Enter impression to be analyzed</textarea></p>
+       <input name="Analyze"  type="submit" value="Update" onclick="handleClick();return false"/>
+     </form>
+     <p id="p1"></p>
+   </body>
+</html>

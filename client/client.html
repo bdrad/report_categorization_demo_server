@@ -33,7 +33,9 @@
 
       function handleClick() {
         var impression = document.getElementById("inputImpression").value;
-        ws.send(impression)
+        var obj_to_send = {"type":"impression", "payload":impression}
+        var to_send = JSON.stringify(obj_to_send)
+        ws.send(to_send)
       }
     </script>
 

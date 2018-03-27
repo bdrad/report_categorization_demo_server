@@ -2,6 +2,7 @@ from websocket_server import WebsocketServer
 import fastText
 import os
 import datetime
+import json
 from end2end_process import EndToEndProcessor
 
 
@@ -37,10 +38,13 @@ def client_left(client, server):
     print("Client(%d) disconnected" % client['id'])
 
 def message_received(client, server, message):
-    print("Client(%d) sent report: %s" % (client['id'], message))
-    processed_report_text, ground_truth, predicted_label = output_prob(message)
-    server.send_message(client, "%0.3f" % predicted_label)
-    # TODO: add logging
+    print("Client(%d) sent: %s" % (client['id'], message))
+    obj = json.loads(message)
+    if obj["type"] == "impression":
+        processed_report_text, ground_truth, predicted_label = output_prob(obj["payload"])
+        server.send_message(client, "%0.3f" % predicted_label)
+    else:
+        raise NotImplementedError
 
 # Run server
 PORT=443

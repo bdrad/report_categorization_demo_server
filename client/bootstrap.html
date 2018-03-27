@@ -8,15 +8,19 @@
 
           ws.onmessage = function (evt) {
             var received_msg = evt.data;
-            var score = Number(received_msg)
-            if (score >= 0.8) {
-              document.getElementById("scoreAlert").className = "alert alert-success";
+            if (received_msg.includes("-")) {
+              document.getElementById("lastmod").innerHTML = "Model last updated " + received_msg
             } else {
-              document.getElementById("scoreAlert").className = "alert alert-info";
+              var score = Number(received_msg)
+              if (score >= 0.8) {
+                document.getElementById("scoreAlert").className = "alert alert-success";
+              } else {
+                document.getElementById("scoreAlert").className = "alert alert-info";
+              }
+              var pct = score * 100
+              pct = pct.toFixed(1)
+              document.getElementById("scoreAlert").innerHTML = "Calculated score: " + pct + "%"
             }
-            var pct = score * 100
-            pct = pct.toFixed(1)
-            document.getElementById("scoreAlert").innerHTML = "Calculated score: " + pct + "%"
           };
 
           window.onbeforeunload = function(event) {
@@ -63,6 +67,7 @@
       </div>
       <button class="btn btn-lg btn-primary btn-block" type="button" onclick="handleClick(); return false;">Analyze Report</button>
       <p class="mt-5 mb-3 text-muted text-center">This demo was created to accompany "Automated determination of communicable findings in radiology reports with intelligent word embeddings"</p>
+      <p class="mt-5 mb-3 text-muted text-center" id="lastmod"></p>
     </form>
   </body>
 </html>

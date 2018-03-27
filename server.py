@@ -1,6 +1,14 @@
 from websocket_server import WebsocketServer
 import fastText
+import os
+import datetime
 from end2end_process import EndToEndProcessor
+
+
+# Get last updated time
+lastm = int(os.path.getmtime("."))
+time_str = datetime.datetime.fromtimestamp(lastm).strftime('%Y-%m-%d %H:%M')
+print(time_str)
 
 # Load Model
 radlex_path = "model/radlex_replacements"
@@ -23,6 +31,7 @@ def output_prob(text, end_to_end=e2e, model=ftModel):
 # Server methods
 def new_client(client, server):
     print("New client connected and was given id %d" % client['id'])
+    server.send_message(client, time_str)
 
 def client_left(client, server):
     print("Client(%d) disconnected" % client['id'])

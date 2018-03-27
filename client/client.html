@@ -8,7 +8,7 @@
 
           ws.onmessage = function (evt) {
             var received_msg = evt.data;
-            if (received_msg.includes("-")) {
+            if (received_msg.includes(" ")) {
               document.getElementById("lastmod").innerHTML = "Model Online. Last updated " + received_msg
             } else {
               var score = Number(received_msg)

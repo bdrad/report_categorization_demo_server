@@ -41,10 +41,10 @@ def message_received(client, server, message):
     print("Client(%d) sent: %s" % (client['id'], message))
     obj = json.loads(message)
     if obj["type"] == "impression":
-        print(obj)
         impression = obj["payload"]
-        print(impression)
         processed_report_text, ground_truth, predicted_label = output_prob(impression)
+        predicted_label = min(predicted_label, 1)
+        predicted_label = max(predicted_label, 0)
         server.send_message(client, "%0.3f" % predicted_label)
     else:
         raise NotImplementedError

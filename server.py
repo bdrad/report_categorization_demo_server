@@ -1,5 +1,5 @@
 from websocket_server import WebsocketServer
-import fastText
+from model import ClassificationModel
 import os
 import datetime
 import json
@@ -16,8 +16,8 @@ radlex_path = "model/radlex_replacements"
 clever_path = "model/clever_replacements"
 e2e = EndToEndProcessor(clever_path, radlex=radlex_path)
 
-model_path = "model/model.bin"
-ftModel = fastText.load_model(model_path)
+model_path = "model/MODEL"
+ftModel = ClassificationModel(path=model_path)
 
 # Returns (process_report_text, ground_truth, predicted_label)
 def output_prob(text, end_to_end=e2e, model=ftModel):
@@ -26,8 +26,7 @@ def output_prob(text, end_to_end=e2e, model=ftModel):
     print(processed_report_text)
     processed_report_text = " ".join(processed_report_text)
     prediction = model.predict(processed_report_text)
-    conf = 1 - prediction[1][0] if prediction[0][0] == '__label__0' else prediction[1][0]
-    return (processed_report_text, ground_truth, conf)
+    return (processed_report_text, ground_truth, prediction)
 
 # Server methods
 def new_client(client, server):

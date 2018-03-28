@@ -1,2 +1,4 @@
 *.pyc
-model/*
+*/*.pyc
+model/MODEL
+*/*.DS_Store

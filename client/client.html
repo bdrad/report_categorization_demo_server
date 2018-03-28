@@ -6,6 +6,10 @@
         if ("WebSocket" in window) {
           ws = new WebSocket("ws://76.21.44.221:443");
 
+          ws.onclose = function(evt) {
+            document.getElementById("lastmod").innerHTML = "Model Offline"
+          }
+
           ws.onmessage = function (evt) {
             var received_msg = evt.data;
             if (received_msg.includes(" ")) {
@@ -35,6 +39,10 @@
         var impression = document.getElementById("inputImpression").value;
         var obj_to_send = {"type":"impression", "payload":impression}
         var to_send = JSON.stringify(obj_to_send)
+
+        document.getElementById("scoreAlert").innerHTML = "Running model.."
+        document.getElementById("scoreAlert").className = "alert"
+
         ws.send(to_send)
       }
     </script>

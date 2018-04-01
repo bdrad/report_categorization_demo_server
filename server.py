@@ -17,11 +17,15 @@ radlex_path = "model/radlex_replacements"
 clever_path = "model/clever_replacements"
 e2e = EndToEndProcessor(clever_path, radlex=radlex_path)
 
+
+state = {ftModel : None, num_clients : 0, model_loaded : False}
 model_path = "model/MODEL"
-ftModel = None # ClassificationModel(path=model_path)
 
 # Returns (process_report_text, ground_truth, predicted_label)
-def output_prob(text, end_to_end=e2e, model=ftModel):
+def output_prob(text, end_to_end=e2e, state=state):
+    if not state["model_loaded"]:
+        state["ftModel"] = ClassificationModel(path=model_path)
+        state["model_loaded"] = True
     report_text = "IMPRESSION: " + text + "\nEND OF IMPRESSION"
     processed_report_text, ground_truth = e2e.transform([report_text])[0]
     print(processed_report_text)
@@ -30,16 +34,20 @@ def output_prob(text, end_to_end=e2e, model=ftModel):
     return (processed_report_text, ground_truth, prediction)
 
 # Server methods
-def new_client(client, server):
-    if len(self.clinets) == 1:
-        ftModel = ClassificationModel(path=model_path)
+def new_client(client, server, state=state):
+    state["num_clients"] += 1
+    if not state["model_loaded"]:
+        state["ftModel"] = ClassificationModel(path=model_path)
+        state["model_loaded"] = True
 
     print("New client connected and was given id %d" % client['id'])
     server.send_message(client, time_str)
 
-def client_left(client, server):
-    if len(self.clinets) == 1:
-        ftModel = None
+def client_left(client, server, state=state):
+    state["num_clients"] += 1
+    if state["num_clients"] == 0:
+        state["ftModel"] = None
+        state["model_loaded"] = False
         gc.collect()
         print(gc.garbage)
     print("Client(%d) disconnected" % client['id'])

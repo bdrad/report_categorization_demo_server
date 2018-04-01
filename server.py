@@ -44,7 +44,7 @@ def new_client(client, server):
 
 def client_left(client, server):
     num_clients -= 1
-    if num_clients = 0:
+    if num_clients == 0:
         ftModel = None
         model_loaded = False
         gc.collect()

@@ -30,7 +30,7 @@ def output_prob(text, end_to_end=e2e, state=state):
     processed_report_text, ground_truth = e2e.transform([report_text])[0]
     print(processed_report_text)
     processed_report_text = " ".join(processed_report_text)
-    prediction = model.predict(processed_report_text)
+    prediction = state["ftModel"].predict(processed_report_text)
     return (processed_report_text, ground_truth, prediction)
 
 # Server methods

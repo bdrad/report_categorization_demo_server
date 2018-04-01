@@ -1,6 +1,7 @@
 from websocket_server import WebsocketServer
 from model import ClassificationModel
 import os
+import gc
 import datetime
 import json
 from end2end_process import EndToEndProcessor
@@ -17,7 +18,10 @@ clever_path = "model/clever_replacements"
 e2e = EndToEndProcessor(clever_path, radlex=radlex_path)
 
 model_path = "model/MODEL"
-ftModel = ClassificationModel(path=model_path)
+ftModel = None # ClassificationModel(path=model_path)
+
+num_clients = 0
+model_loaded = False
 
 # Returns (process_report_text, ground_truth, predicted_label)
 def output_prob(text, end_to_end=e2e, model=ftModel):
@@ -30,10 +34,21 @@ def output_prob(text, end_to_end=e2e, model=ftModel):
 
 # Server methods
 def new_client(client, server):
+    num_clients += 1
+    if not model_loaded:
+        ftModel = ClassificationModel(path=model_path)
+        model_loaded = True
+
     print("New client connected and was given id %d" % client['id'])
     server.send_message(client, time_str)
 
 def client_left(client, server):
+    num_clients -= 1
+    if num_clients = 0:
+        ftModel = None
+        model_loaded = False
+        gc.collect()
+        print(gc.garbage)
     print("Client(%d) disconnected" % client['id'])
 
 def message_received(client, server, message):

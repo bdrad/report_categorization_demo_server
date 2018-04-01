@@ -24,6 +24,7 @@ model_path = "model/MODEL"
 # Returns (process_report_text, ground_truth, predicted_label)
 def output_prob(text, end_to_end=e2e, state=state):
     if not state["model_loaded"]:
+        print("Loading model")
         state["ftModel"] = ClassificationModel(path=model_path)
         state["model_loaded"] = True
     report_text = "IMPRESSION: " + text + "\nEND OF IMPRESSION"
@@ -37,6 +38,7 @@ def output_prob(text, end_to_end=e2e, state=state):
 def new_client(client, server, state=state):
     state["num_clients"] += 1
     if not state["model_loaded"]:
+        print("Loading model")
         state["ftModel"] = ClassificationModel(path=model_path)
         state["model_loaded"] = True
 
@@ -44,8 +46,9 @@ def new_client(client, server, state=state):
     server.send_message(client, time_str)
 
 def client_left(client, server, state=state):
-    state["num_clients"] += 1
+    state["num_clients"] -= 1
     if state["num_clients"] == 0:
+        print("Taking model down")
         state["ftModel"] = None
         state["model_loaded"] = False
         gc.collect()

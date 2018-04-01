@@ -18,7 +18,7 @@ clever_path = "model/clever_replacements"
 e2e = EndToEndProcessor(clever_path, radlex=radlex_path)
 
 
-state = {ftModel : None, num_clients : 0, model_loaded : False}
+state = {"ftModel" : None, "num_clients" : 0, "model_loaded" : False}
 model_path = "model/MODEL"
 
 # Returns (process_report_text, ground_truth, predicted_label)

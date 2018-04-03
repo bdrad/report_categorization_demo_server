@@ -31,6 +31,7 @@ def output_prob(text, end_to_end=e2e, state=state):
     print(processed_report_text)
     processed_report_text = " ".join(processed_report_text)
     prediction = state["ftModel"].predict(processed_report_text)
+    print(prediction)
     return (processed_report_text, ground_truth, prediction)
 
 # Server methods
@@ -41,7 +42,8 @@ def new_client(client, server, state=state):
         state["ftModel"] = ClassificationModel(path=model_path)
         state["model_loaded"] = True
 
-    print("New client connected and was given id %d" % client['id'])
+    now_time = datetime.datetime.fromtimestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')
+    print(now_time + " New client connected and was given id %d" % client['id'])
     server.send_message(client, time_str)
 
 def client_left(client, server, state=state):
@@ -52,7 +54,6 @@ def client_left(client, server, state=state):
         state["model_loaded"] = False
         gc.collect()
         print(gc.garbage)
-    print("Client(%d) disconnected" % client['id'])
 
 def message_received(client, server, message):
     print("Client(%d) sent: %s" % (client['id'], message))

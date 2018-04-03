@@ -42,7 +42,7 @@ def new_client(client, server, state=state):
         state["ftModel"] = ClassificationModel(path=model_path)
         state["model_loaded"] = True
 
-    now_time = datetime.datetime.fromtimestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')
+    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
     print(now_time + " New client connected and was given id %d" % client['id'])
     server.send_message(client, time_str)
 

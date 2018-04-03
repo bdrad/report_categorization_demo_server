@@ -61,7 +61,7 @@ def client_left(client, server, state=state):
         state["ftModel"] = None
         state["model_loaded"] = False
         gc.collect()
-        logger.info("Garbage: " + gc.garbage)
+        logger.info("Garbage: " + str(gc.garbage))
 
 def message_received(client, server, message):
     logger.info("Client(%d) sent: %s" % (client['id'], message))

@@ -18,7 +18,7 @@ logger.setLevel(logging.INFO)
 
 
 # Get last updated time
-lastm = int(os.path.getmtime("."))
+lastm = max(int(os.path.getmtime(".")), int(os.path.getmtime("./model/MODEL")))
 time_str = datetime.datetime.fromtimestamp(lastm).strftime('%Y-%m-%d %H:%M')
 logger.info("Starting server, last modified at " + time_str)
 

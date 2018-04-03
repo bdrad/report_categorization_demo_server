@@ -13,9 +13,8 @@ time_str = datetime.datetime.fromtimestamp(lastm).strftime('%Y-%m-%d %H:%M')
 print(time_str)
 
 # Load Model
-radlex_path = "model/radlex_replacements"
-clever_path = "model/clever_replacements"
-e2e = EndToEndProcessor(clever_path, radlex=radlex_path)
+replacements = ["model/clever_replacements", "model/misc_replacements", "model/radlex_replacements"]
+e2e = EndToEndProcessor(replacements)
 
 
 state = {"ftModel" : None, "num_clients" : 0, "model_loaded" : False}

@@ -8,8 +8,9 @@ import logging
 from end2end_process import EndToEndProcessor
 
 # Set Logging
+now = datetime.datetime.now().strftime('%Y%m%d_%H%M')
 logger = logging.getLogger('server')
-hdlr = logging.FileHandler('./server.log')
+hdlr = logging.FileHandler('./logs/' + now +'_server.log')
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 hdlr.setFormatter(formatter)
 logger.addHandler(hdlr)

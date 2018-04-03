@@ -41,7 +41,7 @@ def output_prob(text, end_to_end=e2e, state=state):
     processed_report_text = " ".join(processed_report_text)
     prediction = state["ftModel"].predict(processed_report_text)
     logger.info(prediction)
-    logger.info (processed_report_text, ground_truth, prediction)
+    return (processed_report_text, ground_truth, prediction)
 
 # Server methods
 def new_client(client, server, state=state):

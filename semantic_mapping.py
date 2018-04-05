@@ -3,6 +3,7 @@ from sklearn.pipeline import Pipeline, FeatureUnion, make_pipeline
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from gensim.models import Phrases
+import itertools
 import pickle
 import re
 
@@ -127,7 +128,6 @@ DateTimeMapper = SemanticMapper([(r'[0-9][0-9]? [0-9][0-9]? [0-9][0-9][0-9][0-9]
                                  (r'[0-9][0-9]? [0-9][0-9] (am|pm)?', '')], regex=True)
 
 AlphaNumRemover = SemanticMapper([(r' [0-9]+','')], regex=True)
-MiscReplacements = SemanticMapper([('intracranial hemorrhage', 'intracranial_hemorrhage')])
 
 ExtenderPreserver = SemanticMapper([(' or ', ' EXT '), (' nor ', ' EXT ')])
 ExtenderRemover = SemanticMapper([('EXT', ''), ('NEGEX_EXT', ''), (('NEGEX_ ', ''))])
@@ -136,30 +136,21 @@ import argparse
 import pickle
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Preprocess a corpus and output it to a file')
-    parser.add_argument('-s','--stopword_removal', dest='stopword_removal', action='store_true')
     parser.add_argument('labeled_reports_in_path')
-    parser.add_argument('replacement_file_path')
-    parser.add_argument('radlex_file_path')
     parser.add_argument('corpus_out_path')
     parser.add_argument('labels_out_path')
+    parser.add_argument('-s','--semantic_maps', nargs='+', required=True)
     args = parser.parse_args()
 
     labeled_reports = pickle.load(open(args.labeled_reports_in_path, "rb"))
 
-    replacements = read_replacements(args.replacement_file_path)
-    radlex_replacements = read_replacements(args.radlex_file_path)
+    replacements = [read_replacements(sm) for sm in args.semantic_maps]
+    replacements = list(itertools.chain.from_iterable(replacements))
+
     ReplacementMapper = SemanticMapper(replacements)
-    RadlexMapper = SemanticMapper(radlex_replacements)
-    pipeline = make_pipeline(ExtenderPreserver, ReplacementMapper, RadlexMapper, DateTimeMapper, None)
-    # pipeline = make_pipeline(ReplacementMapper, DateTimeMapper, None)
+    pipeline = make_pipeline(DateTimeMapper, ExtenderPreserver, ReplacementMapper, StopWordRemover(), NegexSmearer(), ExtenderRemover, None)
 
     labeled_output = pipeline.transform(labeled_reports)
-
-    if args.stopword_removal:
-        labeled_output = StopWordRemover().transform(labeled_output)
-
-    # labeled_output = PhraseDetector().transform(labeled_output)
-    labeled_output = ExtenderRemover.transform(NegexSmearer().transform(labeled_output))
 
     reports_to_corpus(labeled_output, open(args.corpus_out_path, "w"))
     pickle.dump(labeled_output, open(args.labels_out_path, "wb"))

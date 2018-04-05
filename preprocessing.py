@@ -140,7 +140,7 @@ class ExtraneousSentenceRemover(TransformerMixin):
         for report_obj in reports:
             new_sentences = []
             for sentence in report_obj["sentences"]:
-                if not "dictated by" in sentence:
+                if not True in [esm in sentence for esm in ext_sentence_matches]:
                     new_sentences.append(sentence)
             report_obj["sentences"] = new_sentences
             result.append(report_obj)
